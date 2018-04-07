@@ -1,11 +1,11 @@
 #include "Util.h"
+#include "Graph.h"
+#include <iomanip>
 
 void readVertexs(Graph<int> *grafo){
 	ifstream streamVertexs;
 	streamVertexs.open("A.txt");
-
 	string line;
-
 	int informacao;
 	long double latitude, longitude;
 	char ignore;
@@ -21,6 +21,7 @@ void readVertexs(Graph<int> *grafo){
 		ssFicheiro >> longitude;
 
 		grafo->addVertex(informacao, latitude, longitude);
+
 	}
 }
 
