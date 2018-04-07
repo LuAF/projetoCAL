@@ -15,6 +15,8 @@ int main() {
 
 	gv->addEdge(2,0,1,EdgeType::UNDIRECTED);
 
+	readVertexs();
+
 	getchar();
 	return 0;
 }
