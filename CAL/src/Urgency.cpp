@@ -35,3 +35,9 @@ const vector<Resource>& Urgency::getResources() const {
 void Urgency::setResources(const vector<Resource>& resources) {
 	this->resources = resources;
 }
+
+/*
+void Urgency::addUrgency (Urgency u) {
+	this->tiposUrgencia.push_back(u);
+}
+*/

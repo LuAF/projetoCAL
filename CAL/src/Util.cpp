@@ -1,6 +1,117 @@
 #include "Util.h"
 #include "Graph.h"
+#include "Urgency.h"
 #include <iomanip>
+
+void menuInicial() {
+	cout << "Central de atendimento de urgencias" << endl;
+	cout << "[1] Efetuar Chamada" << endl;
+	cout << "[2] Tratar Chamadas" << endl << endl;
+
+	adicionaUrgencias();
+
+	int opt;
+	cout << "> ";
+	cin >> opt;
+
+	while (opt!=1 && opt!=2){
+		cout << "Escolha uma opcao valida! " << endl;
+		cin >> opt;
+	}
+
+	switch(opt) {
+		case 1:
+		{
+			menuOpt1();
+			break;
+		}
+		case 2:
+		{
+			menuOpt2();
+			break;
+		}
+	}
+
+}
+
+void menuOpt1() {
+	cout << endl << "Efetuar Chamada" << endl;
+	cout << "Tipo de Urgencia: ";
+
+	string tipoUrgencia;
+	cin.ignore(100, '\n');
+	getline(cin, tipoUrgencia);
+	cout << endl;
+
+	cout << "Localizacao: ";
+
+	string localizacao;
+	getline(cin, localizacao);
+	cout << endl;
+
+	cout << "LOC: " << localizacao << endl;
+
+}
+
+void menuOpt2() {
+	cout << "Efetuar Chamada" << endl;
+	cout << "" << endl << endl;
+
+	int opt;
+	cout << "> ";
+	cin >> opt;
+
+	while (opt!=1 && opt!=2){
+		cout << "Escolha uma opcao valida! " << endl;
+		cin >> opt;
+	}
+
+}
+
+void adicionaUrgencias() {
+/*
+	//Bombeiros
+
+	Urgency u ("Fuga de gas", 10, {});
+	u.addUrgency(u);
+
+	u.setNome("Incendio");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	u.setNome("Tsunami");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	u.setNome("Acidente com embarcacao");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	u.setNome("Deslizamento de terras");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	//Policia
+
+	u.setNome("Violencia domestica");
+	u.setPriority(4);
+	u.addUrgency(u);
+
+	u.setNome("Rapto de crianças");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	u.setNome("Assalto");
+	u.setPriority(9);
+	u.addUrgency(u);
+
+	//Ambulância
+
+	u.setNome("Assistencia medica");
+	u.setPriority(4);
+	u.addUrgency(u);
+	*/
+}
 
 void readVertexs(Graph<int> *grafo){
 	ifstream streamVertexs;
@@ -98,8 +209,6 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	}
 
 	gv->rearrange();
-
-
 }
 
 

@@ -8,6 +8,7 @@ class Urgency {
 	string nome;
 	unsigned int priority;
 	vector<Resource> resources;
+	static vector<Urgency> tiposUrgencia;
 
 public:
 	Urgency();
@@ -18,6 +19,7 @@ public:
 	void setPriority(unsigned int priority);
 	const vector<Resource>& getResources() const;
 	void setResources(const vector<Resource>& resources);
+	void addUrgency(Urgency u);
 };
 
 #endif /* SRC_URGENCY_H_ */

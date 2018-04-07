@@ -15,9 +15,14 @@
 
 using namespace std;
 
+void menuInicial();
+void menuOpt1();
+void menuOpt2();
+
 void readVertexs(Graph<int> *grafo);
 void readEdges(Graph<int> *grafo);
 void printGraph(GraphViewer *gv ,Graph<int> *grafo);
+void adicionaUrgencias();
 
 
 #endif /* SRC_UTIL_H_ */
