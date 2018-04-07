@@ -27,15 +27,17 @@ class Vertex {
 	T info;                // contents
 	vector<Edge<T> > adj;  // outgoing edges
 	bool visited;          // auxiliary field
+	long double x;		   // latitude
+	long double y;         // longitude
 	double dist = 0;
 	Vertex<T> *path = NULL;
 	int queueIndex = 0; 		// required by MutablePriorityQueue
 
 	bool processing = false;
-	void addEdge(Vertex<T> *dest, double w);
-
 public:
+	void addEdge(Vertex<T> *d, int idRua, string nomeRua, bool sentido);
 	Vertex(T in);
+	Vertex(T in, long double x, long double y);
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	T getInfo() const;
 	double getDist() const;
@@ -44,19 +46,45 @@ public:
 	friend class MutablePriorityQueue<Vertex<T>>;
 
 	bool removeEdgeTo(Vertex<T> *d);
+	long double getX();
+	long double getY();
+	vector<Edge<T> > getAdj();
+
 };
 
+template <class T>
+vector<Edge<T> > Vertex<T>::getAdj(){
+	return this->adj;
+}
+
+template <class T>
+long double Vertex<T>::getX(){
+	return this->x;
+}
+
+template <class T>
+long double Vertex<T>::getY(){
+	return this->y;
+}
 
 template <class T>
 Vertex<T>::Vertex(T in): info(in) {}
+
+template <class T>
+Vertex<T>::Vertex(T in, long double x, long double y): info(in) {
+	this->x = x;
+	this->y = y;
+};
+
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *d, double w) {
-	adj.push_back(Edge<T>(d, w));
+void Vertex<T>::addEdge(Vertex<T> *d, int idRua, string nomeRua, bool sentido ) {
+	long double w = acos (sin(this->x)*sin(d->x)+cos(this->x)*cos(d->x)*cos(abs(this->y - d->y)));
+	adj.push_back(Edge<T>(d, w, idRua, nomeRua, sentido));
 }
 
 template <class T>
@@ -84,15 +112,44 @@ Vertex<T> *Vertex<T>::getPath() const {
 template <class T>
 class Edge {
 	Vertex<T> * dest;      // destination vertex
+	int idRua;
+	string nomeRua;
 	double weight;         // edge weight
+	bool sentido;
 public:
 	Edge(Vertex<T> *d, double w);
+	Edge(Vertex<T> *d, double w, int idRua, string nomeRua, bool sentido);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+	int getIdRua();
+	bool getSentido();
+	Vertex<T> *getDest();
 };
 
 template <class T>
+Vertex<T> *Edge<T>::getDest(){
+	return this->dest;
+}
+
+template <class T>
+bool Edge<T>::getSentido(){
+	return this->sentido;
+}
+
+template <class T>
+int Edge<T>::getIdRua(){
+	return this->idRua;
+}
+
+template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
+
+template <class T>
+Edge<T>::Edge(Vertex<T> *d, double w, int idRua, string nomeRua, bool sentido): dest(d), weight(w) {
+	this->idRua = idRua;
+	this->nomeRua = nomeRua;
+	this->sentido = sentido;
+}
 
 
 /*************************** Graph  **************************/
@@ -102,8 +159,10 @@ class Graph {
 	vector<Vertex<T> *> vertexSet;    // vertex set
 
 public:
+	Graph();
 	Vertex<T> *findVertex(const T &in) const;
 	bool addVertex(const T &in);
+	bool addVertex(const T &in, long double latitude, long double longitude);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
 	vector<Vertex<T> *> getVertexSet() const;
@@ -130,7 +189,18 @@ public:
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
 
+	vector<Vertex<T> *> getVertexSet();
 };
+
+template <class T>
+Graph<T>::Graph(){
+
+}
+
+template <class T>
+vector<Vertex<T> *> Graph<T>::getVertexSet(){
+	return this->vertexSet;
+}
 
 template <class T>
 int Graph<T>::getNumVertex() const {
@@ -147,6 +217,7 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
  */
 template <class T>
 Vertex<T> * Graph<T>::findVertex(const T &in) const {
+	if(!vertexSet.empty())
 	for (auto v : vertexSet)
 		if (v->info == in)
 			return v;
@@ -162,6 +233,14 @@ bool Graph<T>::addVertex(const T &in) {
 	if ( findVertex(in) != NULL)
 		return false;
 	vertexSet.push_back(new Vertex<T>(in));
+	return true;
+}
+
+template <class T>
+bool Graph<T>::addVertex(const T &in, long double latitude, long double longitude) {
+	if ( findVertex(in) != NULL)
+		return false;
+	vertexSet.push_back(new Vertex<T>(in, latitude, longitude));
 	return true;
 }
 

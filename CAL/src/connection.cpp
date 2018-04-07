@@ -29,8 +29,8 @@ Connection::Connection(short port) {
 #else
 		WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-   // if (iResult != NO_ERROR)
-	//			printf("Client: Error at WSAStartup().\n");
+    if (iResult != NO_ERROR)
+				printf("Client: Error at WSAStartup().\n");
 
 	// Create a socket.
     sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
