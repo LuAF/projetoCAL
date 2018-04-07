@@ -410,6 +410,7 @@ Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
 	for (auto v : vertexSet) {
 		v->dist = INF;
 		v->path = nullptr;
+
 	}
 	auto s = findVertex(origin);
 	s->dist = 0;
