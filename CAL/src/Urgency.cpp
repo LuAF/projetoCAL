@@ -1,5 +1,7 @@
 #include "Urgency.h"
 
+vector<Urgency> Urgency::tiposUrgencia = {};
+
 Urgency::Urgency(){
 	this->nome = "";
 	this->priority = 0;
@@ -36,8 +38,7 @@ void Urgency::setResources(const vector<Resource>& resources) {
 	this->resources = resources;
 }
 
-/*
 void Urgency::addUrgency (Urgency u) {
-	this->tiposUrgencia.push_back(u);
+	tiposUrgencia.push_back(u);
 }
-*/
+

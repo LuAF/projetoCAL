@@ -20,6 +20,8 @@ public:
 	const vector<Resource>& getResources() const;
 	void setResources(const vector<Resource>& resources);
 	void addUrgency(Urgency u);
+
+
 };
 
 #endif /* SRC_URGENCY_H_ */
