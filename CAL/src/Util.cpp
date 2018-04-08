@@ -145,6 +145,7 @@ void readEdges(Graph<int> *grafo){
 
 	int idRuaB, idRuaC=-1;
 	int infO, infD;
+	int contador =1;
 	string sentido;
 	char ign;
 	string nomeRua;
@@ -160,7 +161,8 @@ void readEdges(Graph<int> *grafo){
 		sent = (sentido == "True")? true:false;
 
 		if(idRuaC != -1){
-			grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), idRuaC, nomeRua, sent);
+			grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), contador, nomeRua, sent);
+			contador++;
 		}
 
 		do{
@@ -171,7 +173,8 @@ void readEdges(Graph<int> *grafo){
 				ssC >> idRuaC >> ign >> infO >> ign >> infD;
 
 				if(idRuaB == idRuaC){
-					grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), idRuaC, nomeRua, sent);
+					grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), contador, nomeRua, sent);
+					contador++;
 					idRuaC = -1;
 				}
 
@@ -187,14 +190,31 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	int id;
 	long double x, y;
 	int contador = 0;
+	double dXMax = distancia(-8.62063, 41.15047, -8.61066, 41.15047);
+	double dYMax = distancia(-8.62063, 41.15047, -8.62063, 41.14517);
+
 
 	for(unsigned int i=0; i <grafo->getVertexSet().size(); i++){
 
 		id = grafo->getVertexSet().at(i)->getInfo();
-		x = 3257 * (grafo->getVertexSet().at(i)->getX() + 8.62063)/abs(-8.62063 + 8.61066);
-		y = 2301 * (grafo->getVertexSet().at(i)->getY() + 41.15047)/abs(41.15047 - 41.14517);
+		//x = ((grafo->getVertexSet().at(i)->getX() + 8.62063)/abs(-8.62063 + 8.61066))/100;
+		//y = ((grafo->getVertexSet().at(i)->getY() + 41.15047)/abs(41.15047 - 41.14517))/100;
+
+		x = grafo->getVertexSet().at(i)->getX();
+		y = grafo->getVertexSet().at(i)->getY();
+
+		x = distancia(-8.62063,41.15047, x, 41.15047)*1000/dXMax;
+		y = distancia(-8.62063,41.15047, -8.62063, y)*706/dYMax;
+
+		x*=pow(10,-4);
+		y*=pow(10,-4);
+
+
+		cout << x << " :  " << y << endl;
+
 
 		gv->addNode(id, x, y);
+		gv->setVertexSize(id, 10);
 
 	}
 
@@ -211,9 +231,12 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	gv->rearrange();
 }
 
-
-
-
+double distancia(double latitude1, double longitude1, double latitude2, double longitude2){
+	double R = 6378.1366;
+	double a = pow(sin((abs(latitude1*(acos(-1)/180)) - abs(latitude2*(acos(-1)/180)))/2), 2) + cos(latitude1*(acos(-1)/180))*cos(latitude2*(acos(-1)/180)) * pow(sin((abs((longitude1*(acos(-1)/180)) - abs(longitude2*(acos(-1)/180))))/2), 2);
+	double c = 2 * atan2(sqrt(a), sqrt(1-a));
+	return R * c;
+}
 
 
 

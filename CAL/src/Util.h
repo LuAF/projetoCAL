@@ -12,6 +12,7 @@
 #include <unordered_set>
 #include "Graph.h"
 #include <iomanip>
+#include<cmath>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ void readVertexs(Graph<int> *grafo);
 void readEdges(Graph<int> *grafo);
 void printGraph(GraphViewer *gv ,Graph<int> *grafo);
 void adicionaUrgencias();
+double distancia(double latitude1, double longitude1, double latitude2, double longitude2);
 
 
 #endif /* SRC_UTIL_H_ */
