@@ -95,7 +95,7 @@ public:
 	 * @param x Posição horizontal do nó.
 	 * @param y Posição vertical do nó.
 	 */
-	bool addNode(int id, long double x, long double y);
+	bool addNode(int id, int x, int y);
 
 	/**
 	 * Acrescenta um nó à representação do grafo, numa posição ao critério do programa.

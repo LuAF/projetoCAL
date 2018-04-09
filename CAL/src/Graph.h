@@ -83,7 +83,7 @@ Vertex<T>::Vertex(T in, long double x, long double y): info(in) {
  */
 template <class T>
 void Vertex<T>::addEdge(Vertex<T> *d, int idRua, string nomeRua, bool sentido ) {
-	long double w = acos (sin(this->x)*sin(d->x)+cos(this->x)*cos(d->x)*cos(abs(this->y - d->y)));
+	long double w = sqrt(pow(d->getX() - this->getX(),2) + pow(d->getY() - this->getY(),2) );
 	adj.push_back(Edge<T>(d, w, idRua, nomeRua, sentido));
 }
 
@@ -207,7 +207,7 @@ Graph<T>::Graph(){
 template <class T>
 Edge<T> Graph<T>::findEdge(const T &origin, const T &dest){
 
-	for(int i = 0; i < this->findVertex(origin)->getAdj().size(); i++){
+	for(unsigned int i = 0; i < this->findVertex(origin)->getAdj().size(); i++){
 		if(this->findVertex(origin)->getAdj().at(i).getDest()->getInfo() == dest)
 			return this->findVertex(origin)->getAdj().at(i);
 	}

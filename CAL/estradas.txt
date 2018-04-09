@@ -1,0 +1,53 @@
+40;Rua do Hospital de St Antonio;True
+41;Rua da Restauracao;True
+42;Rua de Julio Dinis;True
+43;Rua do ICBAS;True
+44;Tunel dos Almadas;True
+45;Rua Professor Jaime Rios de Sousa;True
+46;Rua de Clemente Meneres;True
+47;Travessa do Carregal;True
+48;Rua Diogo Brandao;True
+49;Rua de Miguel Bombarda;True
+50;Rua da Cedofeita;True
+51;Travessa do Carregal B;True
+52;Rua da Cedofeita B;True
+53;Praca de Carlos Alberto;True
+54;Tunel dos Almadas B;True
+55;Tunel dos Almadas C;True
+56;Rua de Las Palabras;True
+57;Rua do Carmo;True
+58;Rua da Fonte dos Leoes;True
+59;Rua dos Armazens do Castelo;True
+60;Rua da Cordoaria;True
+61;Rua de Sao Filipe de Nery;True
+62;Rua da Assuncao;True
+63;Rua das Carmelitas A;True
+64;Rua das Carmelitas B;True
+65;Rua dos Clerigos;True
+66;Rua do Almada;True
+67;Rua da Fabrica;True
+68;Rua do Conde de Vizela;True
+69;Rua da Fabrica B;True
+70;Rua Candido dos Reis;True
+71;Rua da Fabrica C;True
+72;Rua da Fabrica D;True
+73;Rua da Galeria de Paris;True
+74;Rua de Guilherme Gomes Fernandes;True
+75;Rua Sa de Noronha;True
+76;Largo do Moinho de Vento;True
+77;Rua Ator Joao Guedes;True
+78;Praca de Carlos Alberto B;True
+79;Praca de Carlos Alberto C;True
+80;Rua do Diplomata;True
+81;Rua das Oliveiras;True
+82;Rua Sa de Noronha B;True
+83;Rua da Conceicao;True
+84;Rua de Jose Falcao;True
+85;Rua de Ceuta;True
+86;Rua de Avis;True
+87;Praca Filipa de Lencrastre;True
+88;Rua do Almada B;True
+89;Rua do Almada C;True
+90;Rua de Ricardo;True
+91;Rua da Picaria;True
+92;Rua da Conceicao B;True

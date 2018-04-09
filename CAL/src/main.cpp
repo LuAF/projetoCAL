@@ -7,12 +7,13 @@ int main() {
 
 	gv->setBackground("mapa.png");
 	gv->createWindow(1000, 706);
-	gv->defineVertexColor("green");
+	gv->defineVertexColor("blue");
 	gv->defineEdgeColor("black");
 	gv->defineEdgeCurved(false);
-	//gv->addNode(1000, 1000, 706);
+
 	readVertexs(grafo);
 	readEdges(grafo);
+	readResources(gv, grafo);
 	printGraph(gv, grafo);
 
 	gv->rearrange();

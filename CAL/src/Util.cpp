@@ -83,29 +83,31 @@ void calculateShortestPath(Graph<int> * grafo){
 	vector<vector<int>> caminhosINEM;
 	vector<vector<int>> caminhosPolicia;
 
+	vector<vector<int>> caminhosMaisCurtos;
 
 	Call* call = central->treatCall();
-	for(int i = 0; i < call->getUrgency().getResources().size(); i++){
+
+	for(unsigned int i = 0; i < call->getUrgency().getResources().size(); i++){
 		if(call->getUrgency().getResources().at(i).getName() == "Bombeiro")
-			for(int j = 0; j < call->getUrgency().getResources().at(i).getFiremen().size(); j++){
+			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getFiremen().size(); j++){
 				if(call->getUrgency().getResources().at(i).getFiremen().at(j).isAvailable())
 					caminhosBombeiros.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getFiremen().at(j).getLocalization()));
 			}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Ambulancias")
-			for(int j = 0; j < call->getUrgency().getResources().at(i).getAmbulances().size(); j++){
+			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getAmbulances().size(); j++){
 				if(call->getUrgency().getResources().at(i).getAmbulances().at(j).isAvailable())
 					caminhosAmbulancias.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getAmbulances().at(j).getLocalization()));
 			}
 
 		if(call->getUrgency().getResources().at(i).getName() == "INEM")
-			for(int j = 0; j < call->getUrgency().getResources().at(i).getInem().size(); j++){
+			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getInem().size(); j++){
 				if(call->getUrgency().getResources().at(i).getInem().at(j).isAvailable())
 					caminhosINEM.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getInem().at(j).getLocalization()));
 			}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Policia")
-			for(int j = 0; j < call->getUrgency().getResources().at(i).getPolice().size(); j++){
+			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getPolice().size(); j++){
 				if(call->getUrgency().getResources().at(i).getPolice().at(j).isAvailable())
 					caminhosPolicia.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getPolice().at(j).getLocalization()));
 			}
@@ -122,6 +124,8 @@ void calculateShortestPath(Graph<int> * grafo){
 
 	if(!caminhosPolicia.empty())
 		closerResource(grafo,caminhosPolicia);
+
+
 }
 
 int distance(Graph<int> *g, vector<int> v){
@@ -137,7 +141,7 @@ vector<int> closerResource(Graph<int> *g, vector<vector<int>> v){
 	int result = INT_MAX;
 	int dist = -1;
 	int pos = -1;
-	for(int i = 0; i < v.size(); i++){
+	for(unsigned int i = 0; i < v.size(); i++){
 		dist = distance(g,v.at(i));
 		if(result > dist){
 			result = dist;
@@ -199,7 +203,7 @@ void adicionaUrgencias() {
 
 void readVertexs(Graph<int> *grafo){
 	ifstream streamVertexs;
-	streamVertexs.open("A.txt");
+	streamVertexs.open("nos.txt");
 	string line;
 	int informacao;
 	long double latitude, longitude;
@@ -222,14 +226,13 @@ void readVertexs(Graph<int> *grafo){
 
 void readEdges(Graph<int> *grafo){
 	ifstream streamB, streamC;
-	streamB.open("B.txt");
-	streamC.open("C.txt");
+	streamB.open("estradas.txt");
+	streamC.open("ligacoes.txt");
 
 	string line;
 
 	int idRuaB, idRuaC=-1;
 	int infO, infD;
-	int contador =1;
 	string sentido;
 	char ign;
 	string nomeRua;
@@ -244,28 +247,82 @@ void readEdges(Graph<int> *grafo){
 		ssB >> sentido;
 		sent = (sentido == "True")? true:false;
 
-		if(idRuaC != -1){
-			grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), contador, nomeRua, sent);
-			contador++;
+		while (!streamC.eof()){
+			getline(streamC, line);
+
+			stringstream ssC(line);
+			ssC >> idRuaC >> ign >> infO >> ign >> infD;
+
+			grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), idRuaC, nomeRua, sent);
 		}
 
-		do{
-			if(!streamC.eof()) {
-				getline(streamC, line);
+	}
+}
 
-				stringstream ssC(line);
-				ssC >> idRuaC >> ign >> infO >> ign >> infD;
+void readResources(GraphViewer *gv, Graph<int> *grafo){
+	ifstream streamAmbulancias, streamPolice, streamINEM, streamBombeiros;
+	streamAmbulancias.open("ambulancias.txt");
+	streamPolice.open("police.txt");
+	streamINEM.open("inem.txt");
+	streamBombeiros.open("bombeiros.txt");
+	string line;
+	int id;
+	int localizacao; //id no
+	char ignore;
 
-				if(idRuaB == idRuaC){
-					grafo->findVertex(infO)->addEdge(grafo->findVertex(infD), contador, nomeRua, sent);
-					contador++;
-					idRuaC = -1;
-				}
+	while (!streamAmbulancias.eof()){
 
-			}
-			else break;
+		getline(streamAmbulancias, line);
+		stringstream ssFicheiro(line);
+		ssFicheiro >> id;
+		ssFicheiro >> ignore;
+		ssFicheiro >> localizacao;
 
-		}while (idRuaC == -1);
+		Resource ambulancia(id,"ambulancia",localizacao,true);
+		ambulancia.addAmbulances(ambulancia);
+		gv->setVertexIcon(localizacao,"images/ambulance.png");
+;
+	}
+
+	while (!streamPolice.eof()){
+
+		getline(streamPolice, line);
+		stringstream ssFicheiro(line);
+		ssFicheiro >> id;
+		ssFicheiro >> ignore;
+		ssFicheiro >> localizacao;
+
+		Resource police(id,"policia",localizacao,true);
+		police.addPolice(police);
+		gv->setVertexIcon(localizacao,"images/police.png");
+
+	}
+
+	while (!streamINEM.eof()){
+
+		getline(streamINEM, line);
+		stringstream ssFicheiro(line);
+		ssFicheiro >> id;
+		ssFicheiro >> ignore;
+		ssFicheiro >> localizacao;
+
+		Resource INEM(id,"inem",localizacao,true);
+		INEM.addInem(INEM);
+		gv->setVertexIcon(localizacao,"images/inem.png");
+
+	}
+
+	while (!streamBombeiros.eof()){
+
+		getline(streamBombeiros, line);
+		stringstream ssFicheiro(line);
+		ssFicheiro >> id;
+		ssFicheiro >> ignore;
+		ssFicheiro >> localizacao;
+
+		Resource bombeiros(id,"bombeiro",localizacao,true);
+		bombeiros.addFiremen(bombeiros);
+		gv->setVertexIcon(localizacao,"images/fire-truck.png");
 
 	}
 }
@@ -274,28 +331,13 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	int id;
 	long double x, y;
 	int contador = 0;
-	double dXMax = distancia(-8.62063, 41.15047, -8.61066, 41.15047);
-	double dYMax = distancia(-8.62063, 41.15047, -8.62063, 41.14517);
-
 
 	for(unsigned int i=0; i <grafo->getVertexSet().size(); i++){
 
 		id = grafo->getVertexSet().at(i)->getInfo();
-		//x = ((grafo->getVertexSet().at(i)->getX() + 8.62063)/abs(-8.62063 + 8.61066))/100;
-		//y = ((grafo->getVertexSet().at(i)->getY() + 41.15047)/abs(41.15047 - 41.14517))/100;
 
 		x = grafo->getVertexSet().at(i)->getX();
 		y = grafo->getVertexSet().at(i)->getY();
-
-		x = distancia(-8.62063,41.15047, x, 41.15047)*1000/dXMax;
-		y = distancia(-8.62063,41.15047, -8.62063, y)*706/dYMax;
-
-		x*=pow(10,-4);
-		y*=pow(10,-4);
-
-
-		cout << x << " :  " << y << endl;
-
 
 		gv->addNode(id, x, y);
 		gv->setVertexSize(id, 10);
@@ -314,14 +356,3 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 
 	gv->rearrange();
 }
-
-double distancia(double latitude1, double longitude1, double latitude2, double longitude2){
-	double R = 6378.1366;
-	double a = pow(sin((abs(latitude1*(acos(-1)/180)) - abs(latitude2*(acos(-1)/180)))/2), 2) + cos(latitude1*(acos(-1)/180))*cos(latitude2*(acos(-1)/180)) * pow(sin((abs((longitude1*(acos(-1)/180)) - abs(longitude2*(acos(-1)/180))))/2), 2);
-	double c = 2 * atan2(sqrt(a), sqrt(1-a));
-	return R * c;
-}
-
-
-
-

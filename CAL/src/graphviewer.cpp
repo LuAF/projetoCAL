@@ -109,7 +109,7 @@ bool GraphViewer::addNode(int id) {
 	return con->sendMsg(str);
 }
 
-bool GraphViewer::addNode(int id, long double x, long double y) {
+bool GraphViewer::addNode(int id, int x, int y) {
 	if(isDynamic) {
 		cerr << "This graph is dynamic, "
 				"so the provided x and y values for the node with id "
