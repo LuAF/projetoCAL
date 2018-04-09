@@ -22,7 +22,7 @@ void Urgency::setNome(const string& nome) {
 	this->nome = nome;
 }
 
-unsigned int Urgency::getPriority() const {
+unsigned int Urgency::getPriority()  {
 	return priority;
 }
 
@@ -30,7 +30,7 @@ void Urgency::setPriority(unsigned int priority) {
 	this->priority = priority;
 }
 
-const vector<Resource>& Urgency::getResources() const {
+ vector<Resource>& Urgency::getResources()  {
 	return resources;
 }
 

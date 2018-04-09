@@ -12,13 +12,19 @@
 #include <unordered_set>
 #include "Graph.h"
 #include <iomanip>
-#include<cmath>
+#include <cmath>
+#include <climits>
 
 using namespace std;
 
-void menuInicial();
+
+void menuInicial(Graph<int> * grafo);
 void menuOpt1();
-void menuOpt2();
+void menuOpt2(Graph<int> * grafo);
+void calculateShortestPath(Graph<int> * grafo);
+void showShortestPath();
+int distance(Graph<int> *g, vector<int> v);
+vector<int> closerResource(Graph<int> *g, vector<vector<int>> v);
 
 void readVertexs(Graph<int> *grafo);
 void readEdges(Graph<int> *grafo);

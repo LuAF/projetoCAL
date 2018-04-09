@@ -1,5 +1,10 @@
 #include "Resource.h"
 
+	vector<Resource> Resource::ambulances = {};
+	vector<Resource> Resource::firemen = {};
+	vector<Resource> Resource::police = {};
+	vector<Resource> Resource::inem = {};
+
 Resource::Resource(string name, unsigned int localization, bool available) {
 	this->name = name;
 	this->localization = localization;
@@ -24,6 +29,22 @@ void Resource::setLocalization(unsigned int localization) {
 
 const string& Resource::getName() const {
 	return name;
+}
+
+vector<Resource> Resource::getAmbulances()  {
+	return ambulances;
+}
+
+vector<Resource> Resource::getFiremen()  {
+	return firemen;
+}
+
+vector<Resource> Resource::getInem()  {
+	return inem;
+}
+
+vector<Resource> Resource::getPolice()  {
+	return police;
 }
 
 void Resource::setName(const string& name) {

@@ -10,8 +10,9 @@ private:
 
 public:
 	Central();
-	const priority_queue<Call*>& getCalls() const;
+	priority_queue<Call*> getCalls() ;
 	void addCalls(Call *call);
+	Call* treatCall();
 };
 
 #endif /* CENTRAL_H_ */

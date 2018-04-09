@@ -13,14 +13,14 @@ void Call::setLocalization(unsigned int localization) {
 	this->localization = localization;
 }
 
-const Urgency& Call::getUrgency() const {
+ Urgency & Call::getUrgency()  {
 	return urgency;
 }
 
-void Call::setUrgency(const Urgency& urgency) {
+void Call::setUrgency(const Urgency urgency) {
 	this->urgency = urgency;
 }
 
-bool Call::operator < (const Call & c) const{
+bool Call::operator < ( Call & c) {
 	return this->urgency.getPriority() < c.getUrgency().getPriority();
 }

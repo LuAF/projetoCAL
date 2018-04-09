@@ -124,11 +124,17 @@ public:
 	int getIdRua();
 	bool getSentido();
 	Vertex<T> *getDest();
+	double getWeight();
 };
 
 template <class T>
 Vertex<T> *Edge<T>::getDest(){
 	return this->dest;
+}
+
+template <class T>
+double Edge<T>::getWeight(){
+	return this->weight;
 }
 
 template <class T>
@@ -184,18 +190,30 @@ public:
 	void dijkstraShortestPathOld(const T &s);
 	void unweightedShortestPath(const T &s);
 	void bellmanFordShortestPath(const T &s);
-	vector<T> getPath(const T &origin, const T &dest) const;
+	vector<T> getPath(const T &origin, const T &dest) ;
 
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
 
 	vector<Vertex<T> *> getVertexSet();
+	Edge<T> findEdge(const T &origin, const T &dest);
 };
 
 template <class T>
 Graph<T>::Graph(){
 
 }
+
+template <class T>
+Edge<T> Graph<T>::findEdge(const T &origin, const T &dest){
+
+	for(int i = 0; i < this->findVertex(origin)->getAdj().size(); i++){
+		if(this->findVertex(origin)->getAdj().at(i).getDest()->getInfo() == dest)
+			return this->findVertex(origin)->getAdj().at(i);
+	}
+	return Edge<T>(NULL,0);
+}
+
 
 template <class T>
 vector<Vertex<T> *> Graph<T>::getVertexSet(){
@@ -526,14 +544,15 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 }
 
 template<class T>
-vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
+vector<T> Graph<T>::getPath(const T &origin, const T &dest)  {
+	dijkstraShortestPath(origin);
 	vector<T> res;
 	auto v = findVertex(dest);
 	if (v == nullptr || v->dist == INF) // missing or disconnected
 	return res;
 	for (; v != nullptr; v = v->path)
 		res.push_back(v->info);
-	reverse(res.begin(), res.end());
+	//res.reverse(res.begin(), res.end());
 	return res;
 }
 

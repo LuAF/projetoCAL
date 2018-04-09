@@ -13,9 +13,9 @@ public:
 	Call(Urgency urgency, unsigned int localization);
 	unsigned int getLocalization() const;
 	void setLocalization(unsigned int localization);
-	const Urgency& getUrgency() const;
-	void setUrgency(const Urgency& urgency);
-	bool operator < (const Call & c) const;
+	 Urgency & getUrgency() ;
+	void setUrgency(const Urgency urgency);
+	bool operator < ( Call & c) ;
 };
 
 #endif /* SRC_CALL_H_ */

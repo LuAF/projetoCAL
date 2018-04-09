@@ -14,7 +14,6 @@ private:
 	static vector<Resource> police;
 	static vector<Resource> inem;
 
-
 public:
 	Resource(string name, unsigned int localization, bool available);
 	bool isAvailable() const;
@@ -23,6 +22,10 @@ public:
 	void setLocalization(unsigned int localization);
 	const string& getName() const;
 	void setName(const string& name);
+	vector<Resource> getAmbulances() ;
+	vector<Resource> getFiremen() ;
+	vector<Resource> getInem() ;
+	vector<Resource> getPolice() ;
 };
 
 #endif /* SRC_RESOURCE_H_ */

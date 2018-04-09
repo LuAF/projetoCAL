@@ -4,12 +4,18 @@ Central::Central() {
 
 }
 
-const priority_queue<Call*>& Central::getCalls() const {
+ priority_queue<Call*> Central::getCalls()  {
 	return calls;
 }
 
 void Central::addCalls(Call *call) {
 	calls.push(call);
+}
+
+Call* Central::treatCall(){
+	Call *temp = calls.top();
+	calls.pop();
+	return temp;
 }
 
 

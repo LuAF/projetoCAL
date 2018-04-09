@@ -15,9 +15,9 @@ public:
 	Urgency(string nome, unsigned int priority, vector<Resource> resources);
 	const string& getNome() const;
 	void setNome(const string& nome);
-	unsigned int getPriority() const;
+	unsigned int getPriority() ;
 	void setPriority(unsigned int priority);
-	const vector<Resource>& getResources() const;
+	 vector<Resource>& getResources() ;
 	void setResources(const vector<Resource>& resources);
 	void addUrgency(Urgency u);
 
