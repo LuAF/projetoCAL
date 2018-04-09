@@ -1,10 +1,5 @@
 #include "Resource.h"
 
-	vector<Resource> Resource::ambulances = {};
-	vector<Resource> Resource::firemen = {};
-	vector<Resource> Resource::police = {};
-	vector<Resource> Resource::inem = {};
-
 Resource::Resource() {
 	this->id = 0;
 	this->name = "";
@@ -41,37 +36,6 @@ void Resource::setLocalization(unsigned int localization) {
 	return name;
 }
 
-vector<Resource> Resource::getAmbulances()  {
-	return ambulances;
-}
-
-vector<Resource> Resource::getFiremen()  {
-	return firemen;
-}
-
-vector<Resource> Resource::getInem()  {
-	return inem;
-}
-
-vector<Resource> Resource::getPolice()  {
-	return police;
-}
-
-void Resource::addAmbulances(Resource a)  {
-	ambulances.push_back(a);
-}
-
-void Resource::addFiremen(Resource a)  {
-	firemen.push_back(a);
-}
-
-void Resource::addInem(Resource a)  {
-	inem.push_back(a);
-}
-
-void Resource::addPolice(Resource a)  {
-	police.push_back(a);
-}
 
 void Resource::setName(const string& name) {
 	this->name = name;

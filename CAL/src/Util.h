@@ -34,5 +34,5 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo);
 void adicionaUrgencias();
 double distancia(double latitude1, double longitude1, double latitude2, double longitude2);
 
-
+void setBooleans(string name, bool &b, bool &a, bool &p, bool &i);
 #endif /* SRC_UTIL_H_ */

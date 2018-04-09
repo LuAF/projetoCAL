@@ -105,6 +105,43 @@ vector<int> caminhoHospital(Graph<int> * grafo){
 	return caminhoHospital;
 }
 
+void setBooleans(string name, bool &b, bool &a, bool &p, bool &i){
+	if(name == "Fuga de gas"){
+		a = true;
+		i = true;
+	}else if (name == "Incendio Domestico"){
+		i = true;
+	}else if(name =="Incendio Florestal"){
+		a = true;
+		i = true;
+	}else if(name == "Alerta Tsunami"){
+		a = true;
+		i = true;
+		b = true;
+	}else if(name == "Deslizamento de terras"){
+		i = true;
+	}else if(name == "Violencia domestica"){
+		a = true;
+		i = true;
+		b = true;
+	}else if(name == "Rapto"){
+		a = true;
+		i = true;
+		b = true;
+	}else if(name == "Assalto"){
+		a = true;
+		i = true;
+		b = true;
+	}else if(name == "Assistencia medica grave"){
+		b = true;
+		p = true;
+	}else if(name == "Assistencia medica ligeira"){
+		b = true;
+		p = true;
+		i = true;
+	}
+}
+
 vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo){
 	vector<vector<int>> caminhosBombeiros;
 	vector<vector<int>> caminhosAmbulancias;
@@ -118,112 +155,94 @@ vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo){
 	bool existePolicia = false;
 	bool existeINEM = false;
 
+	setBooleans(call->getUrgency().getNome(), existeBombeiro, existeAmbulancia, existePolicia, existeINEM);
+
 	for(unsigned int i = 0; i < call->getUrgency().getResources().size(); i++){
 		if(call->getUrgency().getResources().at(i).getName() == "Bombeiro")
-			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getFiremen().size(); j++){
-				if(call->getUrgency().getResources().at(i).getFiremen().at(j).isAvailable()){
+			for(unsigned int j = 0; j < central->getFiremen().size(); j++){
+				if(central->getFiremen().at(j).isAvailable()){
 					existeBombeiro = true;
-					caminhosBombeiros.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getFiremen().at(j).getLocalization()));
+					caminhosBombeiros.push_back(grafo->getPath(call->getLocalization(),central->getFiremen().at(j).getLocalization()));
 				}
 			}
-		else existeBombeiro = true;
-
-		if(!existeBombeiro)
-		{
-			cout << "Nao existem bombeiros disponiveis!\n\n";
-			central->ignoreCall();
-			menuInicial(gv,grafo);
-		}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Ambulancia")
-			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getAmbulances().size(); j++){
-				if(call->getUrgency().getResources().at(i).getAmbulances().at(j).isAvailable()){
+			for(unsigned int j = 0; j < central->getAmbulances().size(); j++){
+				if(central->getAmbulances().at(j).isAvailable()){
 					existeAmbulancia = true;
-					caminhosAmbulancias.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getAmbulances().at(j).getLocalization()));
+					caminhosAmbulancias.push_back(grafo->getPath(call->getLocalization(), central->getAmbulances().at(j).getLocalization()));
 				}
 			}
-		else existeAmbulancia = true;
 
-		if(!existeAmbulancia)
-		{
-			cout << "Nao existem ambulancias disponiveis!\n\n";
-			central->ignoreCall();
-			menuInicial(gv,grafo);
-		}
-
-		if(call->getUrgency().getResources().at(i).getName() == "INEM")
-			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getInem().size(); j++){
-				if(call->getUrgency().getResources().at(i).getInem().at(j).isAvailable()){
+		if(call->getUrgency().getResources().at(i).getName() == "INEM"){
+			for(unsigned int j = 0; j < central->getInem().size(); j++){
+				if(central->getInem().at(j).isAvailable()){
 					existeINEM = true;
-					caminhosINEM.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getInem().at(j).getLocalization()));
+					caminhosINEM.push_back(grafo->getPath(call->getLocalization(), central->getInem().at(j).getLocalization()));
 				}
 			}
-		else existeINEM = true;
-
-		if(!existeINEM)
-		{
-			cout << "Nao existem INEMs disponiveis!\n\n";
-			central->ignoreCall();
-			menuInicial(gv,grafo);
 		}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Policia")
-			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getPolice().size(); j++){
-				if(call->getUrgency().getResources().at(i).getPolice().at(j).isAvailable()){
+			for(unsigned int j = 0; j < central->getPolice().size(); j++){
+				if(central->getPolice().at(j).isAvailable()){
 					existePolicia = true;
-					caminhosPolicia.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getPolice().at(j).getLocalization()));
+					caminhosPolicia.push_back(grafo->getPath(call->getLocalization(), central->getPolice().at(j).getLocalization()));
 				}
 			}
-		else existePolicia = true;
 
-		if(!existePolicia)
-		{
-			cout << "Nao existem policias disponiveis!\n\n";
-			central->ignoreCall();
-			menuInicial(gv,grafo);
-		}
 	}
 
+	if(!existePolicia || !existeAmbulancia || !existeBombeiro || !existeINEM){
+		cout << "Recursos indisponiveis!\n\n";
+		central->ignoreCall();
+		menuInicial(gv,grafo);
+	}
 
-
-
-	Resource *r = new Resource();
 	vector<int> temp;
 
 	if(!caminhosBombeiros.empty()){
 		temp = closerResource(grafo,caminhosBombeiros);
-		for(unsigned int i = 0; i < r->getFiremen().size();i++)
-			if(temp.at(0) == r->getFiremen().at(i).getLocalization())
-				r->getFiremen().at(i).setAvailable(false);
+		for(unsigned int i = 0; i < central->getFiremen().size();i++)
+			if(temp.at(0) == central->getFiremen().at(i).getLocalization())
+				central->setUnavailable("bombeiro",i);
 
 		caminhosMaisCurtos.push_back(temp);
 	}
 
 	if(!caminhosAmbulancias.empty()){
 		temp = closerResource(grafo,caminhosAmbulancias);
-		for(unsigned int i = 0; i < r->getAmbulances().size();i++)
-			if(temp.at(0) == r->getAmbulances().at(i).getLocalization())
-				r->getAmbulances().at(i).setAvailable(false);
+		for(unsigned int i = 0; i < central->getAmbulances().size();i++)
+			if(temp.at(0) == central->getAmbulances().at(i).getLocalization())
+				central->setUnavailable("ambulancia",i);
 
 		caminhosMaisCurtos.push_back(temp);
 	}
 
 	if(!caminhosINEM.empty()){
 		temp = closerResource(grafo,caminhosINEM);
-		for(unsigned int i = 0; i < r->getInem().size();i++)
-			if(temp.at(0) == r->getInem().at(i).getLocalization())
-				r->getInem().at(i).setAvailable(false);
+		for(unsigned int i = 0; i < central->getInem().size();i++)
+			if(temp.at(0) == central->getInem().at(i).getLocalization())
+				central->setUnavailable("inem",i);
 
 		caminhosMaisCurtos.push_back(temp);
 	}
 
 	if(!caminhosPolicia.empty()){
 		temp = closerResource(grafo,caminhosPolicia);
-		for(unsigned int i = 0; i < r->getPolice().size();i++)
-			if(temp.at(0) == r->getPolice().at(i).getLocalization())
-				r->getPolice().at(i).setAvailable(false);
+		for(unsigned int i = 0; i < central->getPolice().size();i++)
+			if(temp.at(0) == central->getPolice().at(i).getLocalization())
+				central->setUnavailable("policia",i);
 
 		caminhosMaisCurtos.push_back(temp);
+	}
+
+	if(!caminhosINEM.empty()){
+		for(int i = 0; i < central->getInem().size();i++){
+			if(central->getInem().at(i).isAvailable())
+				cout << "True\n";
+			else cout << "False\n";
+		}
 	}
 
 	temp = {};
@@ -406,7 +425,7 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 		ssFicheiro >> localizacao;
 
 		Resource ambulancia(id,"ambulancia",localizacao,true);
-		ambulancia.addAmbulances(ambulancia);
+		central->addAmbulances(ambulancia);
 		gv->setVertexIcon(localizacao,"images/ambulance.png");
 ;
 	}
@@ -420,7 +439,7 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 		ssFicheiro >> localizacao;
 
 		Resource police(id,"policia",localizacao,true);
-		police.addPolice(police);
+		central->addPolice(police);
 		gv->setVertexIcon(localizacao,"images/police.png");
 
 	}
@@ -434,7 +453,7 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 		ssFicheiro >> localizacao;
 
 		Resource INEM(id,"inem",localizacao,true);
-		INEM.addInem(INEM);
+		central->addInem(INEM);
 		gv->setVertexIcon(localizacao,"images/inem.png");
 
 	}
@@ -448,7 +467,7 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 		ssFicheiro >> localizacao;
 
 		Resource bombeiros(id,"bombeiro",localizacao,true);
-		bombeiros.addFiremen(bombeiros);
+		central->addFiremen(bombeiros);
 		gv->setVertexIcon(localizacao,"images/fire-truck.png");
 
 	}
@@ -484,7 +503,7 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 
 	}
 
-	readResources(gv, grafo);
+	//readResources(gv, grafo);
 
 	for(unsigned int i=0; i <grafo->getVertexSet().size(); i++){
 		for(unsigned int j = 0;j < grafo->getVertexSet().at(i)->getAdj().size(); j++){

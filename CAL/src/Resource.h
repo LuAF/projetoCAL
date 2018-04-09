@@ -10,10 +10,6 @@ private:
 	string name;
 	unsigned int localization;
 	bool available;
-	static vector<Resource> ambulances;
-	static vector<Resource> firemen;
-	static vector<Resource> police;
-	static vector<Resource> inem;
 
 public:
 	Resource();
@@ -25,14 +21,7 @@ public:
 	void setLocalization(unsigned int localization);
 	string getName() ;
 	void setName(const string& name);
-	vector<Resource> getAmbulances() ;
-	vector<Resource> getFiremen() ;
-	vector<Resource> getInem() ;
-	vector<Resource> getPolice() ;
-	void addAmbulances(Resource a);
-	void addFiremen(Resource a);
-	void addInem(Resource a);
-	void addPolice(Resource a);
+
 
 };
 
