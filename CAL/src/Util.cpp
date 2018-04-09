@@ -1,19 +1,17 @@
 #include "Util.h"
 #include "Graph.h"
 #include "Urgency.h"
-#include "Call.h"
 #include "Central.h"
 #include "Resource.h"
 #include <iomanip>
 
 Central *central = new Central();
+Call * call;
 
-void menuInicial(Graph<int> * grafo) {
+void menuInicial(GraphViewer *gv, Graph<int> * grafo) {
 	cout << "Central de atendimento de urgencias" << endl;
 	cout << "[1] Efetuar Chamada" << endl;
 	cout << "[2] Tratar Chamadas" << endl << endl;
-
-	adicionaUrgencias();
 
 	int opt;
 	cout << "> ";
@@ -27,65 +25,88 @@ void menuInicial(Graph<int> * grafo) {
 	switch(opt) {
 		case 1:
 		{
-			menuOpt1();
+			menuOpt1(gv, grafo);
 			break;
 		}
 		case 2:
 		{
-			menuOpt2(grafo);
+			menuOpt2(gv, grafo);
 			break;
 		}
 	}
 
 }
 
-void menuOpt1() {
-	cout << endl << "Efetuar Chamada" << endl;
-	cout << "Tipo de Urgencia: ";
+void menuOpt1(GraphViewer *gv, Graph<int> * grafo) {
+	cout << endl << "Efetuar Chamada\n" << endl;
+	cout << "Tipo de Urgencia: \n\n";
 
-	string tipoUrgencia;
-	cin.ignore(100, '\n');
-	getline(cin, tipoUrgencia);
-	cout << endl;
+	Urgency* u = new Urgency();
+	for(unsigned int i = 0; i < u->getTiposUrgencia().size();i++ ){
+		cout << "[" << i+1 << "] " << u->getTiposUrgencia().at(i).getNome() << endl;
+	}
 
-	cout << "Localizacao: ";
-
-	string localizacao;
-	getline(cin, localizacao);
-	cout << endl;
-
-	cout << "LOC: " << localizacao << endl;
-
-}
-
-void menuOpt2(Graph<int> * grafo) {
-	cout << "Efetuar Chamada" << endl;
-	cout << "" << endl << endl;
-
-	int opt;
-	cout << "> ";
+	unsigned int opt;
+	cout << "\n> ";
 	cin >> opt;
 
-	while (opt!=1 && opt!=2){
+
+	while (opt < 1 && opt > u->getTiposUrgencia().size()){
 		cout << "Escolha uma opcao valida! " << endl;
 		cin >> opt;
 	}
 
+	opt--;
+
+	cout << "\nLocalizacao(ID do no): ";
+
+	unsigned int localizacao;
+	cin >> localizacao;
+
+
+	while (localizacao < 1 || localizacao > 35){
+		cout << "Escolha uma opcao valida (Entre 1 e 35) ! " << endl;
+		cout << "\n\nLocalizacao(ID do no): ";
+		cin >> localizacao;
+	}
+
+	Call* call = new Call(u->getTiposUrgencia().at(opt),localizacao);
+	central->addCalls(call);
+	cout << endl << endl;
+	menuInicial(gv,grafo);
+
 }
 
-void calculateShortestPath(Graph<int> * grafo){
-	//first in priority queue, get localizacao
-	//recursos needed
-	//guardar em vetor as distancias para cada recurso disponivel
-	//devolver vetor com vetores dos caminhos
+void menuOpt2(GraphViewer *gv, Graph<int> * grafo) {
+	cout << "Tratar Chamada" << endl;
+
+	call = central->treatCall();
+
+	printGraph(gv,grafo);
+	getchar();
+	cout << "Tratamento da chamada de maior prioridade concluido \n\n" << endl << endl;
+	menuInicial(gv,grafo);
+}
+
+vector<int> caminhoHospital(Graph<int> * grafo){
+	vector<int> caminhoHospital;
+	for(unsigned int i = 0; i < call->getUrgency().getResources().size(); i++){
+		if(call->getUrgency().getResources().at(i).getName() == "Ambulancia" || call->getUrgency().getResources().at(i).getName() == "INEM"){
+			if(call->getLocalization() != 5)
+				caminhoHospital = grafo->getPath(call->getLocalization(),5);
+		}
+	}
+
+	return caminhoHospital;
+}
+
+vector<vector<int>> calculateShortestPath(Graph<int> * grafo){
 	vector<vector<int>> caminhosBombeiros;
 	vector<vector<int>> caminhosAmbulancias;
 	vector<vector<int>> caminhosINEM;
 	vector<vector<int>> caminhosPolicia;
 
 	vector<vector<int>> caminhosMaisCurtos;
-
-	Call* call = central->treatCall();
 
 	for(unsigned int i = 0; i < call->getUrgency().getResources().size(); i++){
 		if(call->getUrgency().getResources().at(i).getName() == "Bombeiro")
@@ -94,10 +115,11 @@ void calculateShortestPath(Graph<int> * grafo){
 					caminhosBombeiros.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getFiremen().at(j).getLocalization()));
 			}
 
-		if(call->getUrgency().getResources().at(i).getName() == "Ambulancias")
+		if(call->getUrgency().getResources().at(i).getName() == "Ambulancia")
 			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getAmbulances().size(); j++){
-				if(call->getUrgency().getResources().at(i).getAmbulances().at(j).isAvailable())
+				if(call->getUrgency().getResources().at(i).getAmbulances().at(j).isAvailable()){
 					caminhosAmbulancias.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getAmbulances().at(j).getLocalization()));
+				}
 			}
 
 		if(call->getUrgency().getResources().at(i).getName() == "INEM")
@@ -113,23 +135,56 @@ void calculateShortestPath(Graph<int> * grafo){
 			}
 	}
 
-	if(!caminhosBombeiros.empty())
-		closerResource(grafo,caminhosBombeiros);
 
-	if(!caminhosAmbulancias.empty())
-		closerResource(grafo,caminhosAmbulancias);
 
-	if(!caminhosINEM.empty())
-		closerResource(grafo,caminhosINEM);
 
-	if(!caminhosPolicia.empty())
-		closerResource(grafo,caminhosPolicia);
+	Resource *r = new Resource();
+	vector<int> temp;
 
+	if(!caminhosBombeiros.empty()){
+		temp = closerResource(grafo,caminhosBombeiros);
+		for(unsigned int i = 0; i < r->getFiremen().size();i++)
+			if(temp.at(0) == r->getFiremen().at(i).getLocalization())
+				r->getFiremen().at(i).setAvailable(false);
+
+		caminhosMaisCurtos.push_back(temp);
+	}
+
+	if(!caminhosAmbulancias.empty()){
+		temp = closerResource(grafo,caminhosAmbulancias);
+		for(unsigned int i = 0; i < r->getAmbulances().size();i++)
+			if(temp.at(0) == r->getAmbulances().at(i).getLocalization())
+				r->getAmbulances().at(i).setAvailable(false);
+
+		caminhosMaisCurtos.push_back(temp);
+	}
+
+	if(!caminhosINEM.empty()){
+		temp = closerResource(grafo,caminhosINEM);
+		for(unsigned int i = 0; i < r->getInem().size();i++)
+			if(temp.at(0) == r->getInem().at(i).getLocalization())
+				r->getInem().at(i).setAvailable(false);
+
+		caminhosMaisCurtos.push_back(temp);
+	}
+
+	if(!caminhosPolicia.empty()){
+		temp = closerResource(grafo,caminhosPolicia);
+		for(unsigned int i = 0; i < r->getPolice().size();i++)
+			if(temp.at(0) == r->getPolice().at(i).getLocalization())
+				r->getPolice().at(i).setAvailable(false);
+
+		caminhosMaisCurtos.push_back(temp);
+	}
+
+	temp = {};
+
+	return caminhosMaisCurtos;
 
 }
 
-int distance(Graph<int> *g, vector<int> v){
-	int contador = 0;
+double distance(Graph<int> *g, vector<int> v){
+	double contador = 0;
 	for(int i = v.size() - 1; i > 0; i--){
 		contador += g->findEdge(v.at(i), v.at(i-1)).getWeight();
 	}
@@ -137,10 +192,9 @@ int distance(Graph<int> *g, vector<int> v){
 	return contador;
 }
 
-
 vector<int> closerResource(Graph<int> *g, vector<vector<int>> v){
 	int result = INT_MAX;
-	int dist = -1;
+	double dist = -1.0;
 	int pos = -1;
 	for(unsigned int i = 0; i < v.size(); i++){
 		dist = distance(g,v.at(i));
@@ -149,55 +203,78 @@ vector<int> closerResource(Graph<int> *g, vector<vector<int>> v){
 			pos = i;
 		}
 	}
-
 	return v.at(pos);
 }
 
-void showShortestPath(){
-
-}
-
 void adicionaUrgencias() {
+	Resource policia("Policia");
+	Resource bombeiro("Bombeiro");
+	Resource inem("INEM");
+	Resource ambulancia("Ambulancia");
 
-	//Bombeiros
-
-	Urgency u ("Fuga de gas", 10, {});
+	Urgency u ("Fuga de gas", 3, {});
+	u.addResources(bombeiro);
+	u.addResources(policia);
 	u.addUrgency(u);
 
-	u.setNome("Incendio");
+	u.cleanResources();
+	u.setNome("Incendio Domestico");
+	u.addResources(bombeiro);
+	u.addResources(policia);
+	u.addResources(ambulancia);
+	u.setPriority(5);
+	u.addUrgency(u);
+
+	u.cleanResources();
+	u.setNome("Incendio Florestal");
+	u.addResources(bombeiro);
+	u.addResources(policia);
+	u.setPriority(2);
+	u.addUrgency(u);
+
+	u.cleanResources();
+	u.setNome("Alerta Tsunami");
+	u.addResources(policia);
 	u.setPriority(9);
 	u.addUrgency(u);
 
-	u.setNome("Tsunami");
-	u.setPriority(9);
-	u.addUrgency(u);
-
-	u.setNome("Acidente com embarcacao");
-	u.setPriority(9);
-	u.addUrgency(u);
-
+	u.cleanResources();
 	u.setNome("Deslizamento de terras");
-	u.setPriority(9);
+	u.addResources(bombeiro);
+	u.addResources(policia);
+	u.addResources(ambulancia);
+	u.setPriority(8);
 	u.addUrgency(u);
 
-	//Policia
-
+	u.cleanResources();
 	u.setNome("Violencia domestica");
-	u.setPriority(4);
+	u.addResources(policia);
+	u.setPriority(6);
 	u.addUrgency(u);
 
-	u.setNome("Rapto de crianças");
-	u.setPriority(9);
+	u.cleanResources();
+	u.setNome("Rapto");
+	u.addResources(policia);
+	u.setPriority(7);
 	u.addUrgency(u);
 
+	u.cleanResources();
 	u.setNome("Assalto");
-	u.setPriority(9);
+	u.addResources(policia);
+	u.setPriority(3);
 	u.addUrgency(u);
 
-	//Ambulância
+	u.cleanResources();
+	u.setNome("Assistencia medica grave");
+	u.addResources(ambulancia);
+	u.addResources(inem);
+	u.setPriority(1);
+	u.addUrgency(u);
 
-	u.setNome("Assistencia medica");
-	u.setPriority(4);
+	u.cleanResources();
+	u.setNome("Assistencia medica ligeira");
+	u.addResources(ambulancia);
+	u.setPriority(6);
 	u.addUrgency(u);
 
 }
@@ -246,7 +323,7 @@ void readEdges(Graph<int> *grafo){
 		ssB >> idRuaB >> ign;
 		getline(ssB,nomeRua, ';');
 		ssB >> sentido;
-		sent = (sentido == "True")? true:false;
+		sent = true;
 
 		while (!streamC.eof()){
 			getline(streamC, line);
@@ -329,6 +406,15 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 }
 
 void printGraph(GraphViewer *gv ,Graph<int> *grafo){
+	gv->setBackground("mapa.png");
+	gv->createWindow(1000, 706);
+	gv->defineVertexColor("blue");
+	gv->defineEdgeColor("black");
+	gv->defineEdgeCurved(false);
+
+	vector<vector<int>> temp = calculateShortestPath(grafo);
+	vector<int> hospital = caminhoHospital(grafo);
+
 	int id;
 	long double x, y;
 	int contador = 0;
@@ -342,18 +428,52 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 
 		gv->addNode(id, x, y);
 		gv->setVertexSize(id, 10);
+		gv->setVertexColor(id,"blue");
+		if(id == 5)
+			gv->setVertexIcon(id, "images/hospital.png");
+		else gv->setVertexIcon(id, "images/default.png");
 
 	}
 
+	readResources(gv, grafo);
+
 	for(unsigned int i=0; i <grafo->getVertexSet().size(); i++){
 		for(unsigned int j = 0;j < grafo->getVertexSet().at(i)->getAdj().size(); j++){
-			if(grafo->getVertexSet().at(i)->getAdj().at(j).getSentido())
-				gv->addEdge(contador, grafo->getVertexSet().at(i)->getInfo(), grafo->getVertexSet().at(i)->getAdj().at(j).getDest()->getInfo(), EdgeType::DIRECTED);
-			else gv->addEdge(contador, grafo->getVertexSet().at(i)->getInfo(), grafo->getVertexSet().at(i)->getAdj().at(j).getDest()->getInfo(), EdgeType::UNDIRECTED);
+			gv->addEdge(contador, grafo->getVertexSet().at(i)->getInfo(), grafo->getVertexSet().at(i)->getAdj().at(j).getDest()->getInfo(), EdgeType::UNDIRECTED);
 
 			contador++;
 		}
 	}
 
+	for(unsigned int i = 0; i < temp.size(); i++){
+		for(unsigned int j = 0; j < temp.at(i).size() - 1; j++){
+			contador++;
+
+			if(j == temp.at(i).size() - 2){
+				gv->setVertexIcon(temp.at(i).at(j+1),"images/sos.png");
+			}
+
+			gv->addEdge(contador,temp.at(i).at(j),temp.at(i).at(j+1),EdgeType::UNDIRECTED);
+			gv->setVertexColor(temp.at(i).at(j),"red");
+			gv->setVertexColor(temp.at(i).at(j+1),"red");
+			gv->setEdgeColor(contador, "red");
+			gv->setEdgeThickness(contador, 4);
+		}
+	}
+
+	if(!hospital.empty())
+	for(unsigned int i = 0; i < hospital.size() - 1; i++){
+		contador++;
+		gv->addEdge(contador,hospital.at(i),hospital.at(i+1),EdgeType::UNDIRECTED);
+		gv->setVertexColor(hospital.at(i),"orange");
+		gv->setVertexColor(hospital.at(i+1),"orange");
+		gv->setEdgeColor(contador, "orange");
+		gv->setEdgeThickness(contador, 3);
+	}
+
+	temp = {};
+
 	gv->rearrange();
+
+
 }

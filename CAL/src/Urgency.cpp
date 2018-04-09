@@ -42,3 +42,14 @@ void Urgency::addUrgency (Urgency u) {
 	tiposUrgencia.push_back(u);
 }
 
+void Urgency::addResources(Resource r){
+	resources.push_back(r);
+}
+
+vector<Urgency> Urgency::getTiposUrgencia(){
+	return tiposUrgencia;
+}
+
+void Urgency::cleanResources(){
+	this->resources = {};
+}

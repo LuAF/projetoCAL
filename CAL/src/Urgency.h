@@ -17,10 +17,12 @@ public:
 	void setNome(const string& nome);
 	unsigned int getPriority() ;
 	void setPriority(unsigned int priority);
-	 vector<Resource>& getResources() ;
+	vector<Resource>& getResources() ;
 	void setResources(const vector<Resource>& resources);
 	void addUrgency(Urgency u);
-
+	void addResources(Resource r);
+	vector<Urgency> getTiposUrgencia();
+	void cleanResources();
 
 };
 

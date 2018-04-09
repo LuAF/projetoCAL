@@ -18,12 +18,13 @@
 using namespace std;
 
 
-void menuInicial(Graph<int> * grafo);
-void menuOpt1();
-void menuOpt2(Graph<int> * grafo);
-void calculateShortestPath(Graph<int> * grafo);
+void menuInicial(GraphViewer *gv, Graph<int> * grafo);
+void menuOpt1(GraphViewer *gv, Graph<int> * grafo);
+void menuOpt2(GraphViewer *gv, Graph<int> * grafo);
+vector<int> caminhoHospital(Graph<int> * grafo);
+vector<vector<int>> calculateShortestPath(Graph<int> * grafo);
 void showShortestPath();
-int distance(Graph<int> *g, vector<int> v);
+double distance(Graph<int> *g, vector<int> v);
 vector<int> closerResource(Graph<int> *g, vector<vector<int>> v);
 
 void readVertexs(Graph<int> *grafo);

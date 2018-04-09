@@ -16,12 +16,14 @@ private:
 	static vector<Resource> inem;
 
 public:
+	Resource();
+	Resource(string name);
 	Resource(int id, string name, unsigned int localization, bool available);
 	bool isAvailable() const;
 	void setAvailable(bool available);
 	unsigned int getLocalization() const;
 	void setLocalization(unsigned int localization);
-	const string& getName() const;
+	string getName() ;
 	void setName(const string& name);
 	vector<Resource> getAmbulances() ;
 	vector<Resource> getFiremen() ;

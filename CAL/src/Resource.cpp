@@ -5,6 +5,15 @@
 	vector<Resource> Resource::police = {};
 	vector<Resource> Resource::inem = {};
 
+Resource::Resource() {
+	this->id = 0;
+	this->name = "";
+}
+
+Resource::Resource(string name){
+	this->name = name;
+}
+
 Resource::Resource(int id, string name, unsigned int localization, bool available) {
 	this->id = id;
 	this->name = name;
@@ -28,7 +37,7 @@ void Resource::setLocalization(unsigned int localization) {
 	this->localization = localization;
 }
 
-const string& Resource::getName() const {
+ string Resource::getName()  {
 	return name;
 }
 
