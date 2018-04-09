@@ -137,6 +137,7 @@ int distance(Graph<int> *g, vector<int> v){
 	return contador;
 }
 
+
 vector<int> closerResource(Graph<int> *g, vector<vector<int>> v){
 	int result = INT_MAX;
 	int dist = -1;
