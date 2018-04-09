@@ -18,4 +18,7 @@ Call* Central::treatCall(){
 	return temp;
 }
 
+void Central::ignoreCall(){
+	calls.pop();
+}
 

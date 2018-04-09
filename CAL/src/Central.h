@@ -13,6 +13,7 @@ public:
 	priority_queue<Call*> getCalls() ;
 	void addCalls(Call *call);
 	Call* treatCall();
+	void ignoreCall();
 };
 
 #endif /* CENTRAL_H_ */

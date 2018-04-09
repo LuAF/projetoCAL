@@ -80,7 +80,12 @@ void menuOpt1(GraphViewer *gv, Graph<int> * grafo) {
 void menuOpt2(GraphViewer *gv, Graph<int> * grafo) {
 	cout << "Tratar Chamada" << endl;
 
-	call = central->treatCall();
+	if(!central->getCalls().empty())
+		call = central->treatCall();
+	else {
+		cout << "Nao existem chamadas a tratar!\n\n";
+		menuInicial(gv,grafo);
+	}
 
 	printGraph(gv,grafo);
 	getchar();
@@ -100,7 +105,7 @@ vector<int> caminhoHospital(Graph<int> * grafo){
 	return caminhoHospital;
 }
 
-vector<vector<int>> calculateShortestPath(Graph<int> * grafo){
+vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo){
 	vector<vector<int>> caminhosBombeiros;
 	vector<vector<int>> caminhosAmbulancias;
 	vector<vector<int>> caminhosINEM;
@@ -108,31 +113,75 @@ vector<vector<int>> calculateShortestPath(Graph<int> * grafo){
 
 	vector<vector<int>> caminhosMaisCurtos;
 
+	bool existeBombeiro = false;
+	bool existeAmbulancia = false;
+	bool existePolicia = false;
+	bool existeINEM = false;
+
 	for(unsigned int i = 0; i < call->getUrgency().getResources().size(); i++){
 		if(call->getUrgency().getResources().at(i).getName() == "Bombeiro")
 			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getFiremen().size(); j++){
-				if(call->getUrgency().getResources().at(i).getFiremen().at(j).isAvailable())
+				if(call->getUrgency().getResources().at(i).getFiremen().at(j).isAvailable()){
+					existeBombeiro = true;
 					caminhosBombeiros.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getFiremen().at(j).getLocalization()));
+				}
 			}
+		else existeBombeiro = true;
+
+		if(!existeBombeiro)
+		{
+			cout << "Nao existem bombeiros disponiveis!\n\n";
+			central->ignoreCall();
+			menuInicial(gv,grafo);
+		}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Ambulancia")
 			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getAmbulances().size(); j++){
 				if(call->getUrgency().getResources().at(i).getAmbulances().at(j).isAvailable()){
+					existeAmbulancia = true;
 					caminhosAmbulancias.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getAmbulances().at(j).getLocalization()));
 				}
 			}
+		else existeAmbulancia = true;
+
+		if(!existeAmbulancia)
+		{
+			cout << "Nao existem ambulancias disponiveis!\n\n";
+			central->ignoreCall();
+			menuInicial(gv,grafo);
+		}
 
 		if(call->getUrgency().getResources().at(i).getName() == "INEM")
 			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getInem().size(); j++){
-				if(call->getUrgency().getResources().at(i).getInem().at(j).isAvailable())
+				if(call->getUrgency().getResources().at(i).getInem().at(j).isAvailable()){
+					existeINEM = true;
 					caminhosINEM.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getInem().at(j).getLocalization()));
+				}
 			}
+		else existeINEM = true;
+
+		if(!existeINEM)
+		{
+			cout << "Nao existem INEMs disponiveis!\n\n";
+			central->ignoreCall();
+			menuInicial(gv,grafo);
+		}
 
 		if(call->getUrgency().getResources().at(i).getName() == "Policia")
 			for(unsigned int j = 0; j < call->getUrgency().getResources().at(i).getPolice().size(); j++){
-				if(call->getUrgency().getResources().at(i).getPolice().at(j).isAvailable())
+				if(call->getUrgency().getResources().at(i).getPolice().at(j).isAvailable()){
+					existePolicia = true;
 					caminhosPolicia.push_back(grafo->getPath(call->getLocalization(), call->getUrgency().getResources().at(i).getPolice().at(j).getLocalization()));
+				}
 			}
+		else existePolicia = true;
+
+		if(!existePolicia)
+		{
+			cout << "Nao existem policias disponiveis!\n\n";
+			central->ignoreCall();
+			menuInicial(gv,grafo);
+		}
 	}
 
 
@@ -412,7 +461,7 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	gv->defineEdgeColor("black");
 	gv->defineEdgeCurved(false);
 
-	vector<vector<int>> temp = calculateShortestPath(grafo);
+	vector<vector<int>> temp = calculateShortestPath(gv, grafo);
 	vector<int> hospital = caminhoHospital(grafo);
 
 	int id;
