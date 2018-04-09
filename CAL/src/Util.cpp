@@ -195,8 +195,7 @@ vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo){
 
 	if(!existePolicia || !existeAmbulancia || !existeBombeiro || !existeINEM){
 		cout << "Recursos indisponiveis!\n\n";
-		central->ignoreCall();
-		menuInicial(gv,grafo);
+		exit(0);
 	}
 
 	vector<int> temp;

@@ -19,7 +19,10 @@ Call* Central::treatCall(){
 }
 
 void Central::ignoreCall(){
+	Call* temp = calls.top();
+
 	calls.pop();
+	delete temp;
 }
 
 vector<Resource> Central::getAmbulances()  {
