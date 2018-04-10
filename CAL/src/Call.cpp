@@ -22,6 +22,6 @@ void Call::setUrgency(const Urgency urgency) {
 }
 
 bool Call::operator < ( Call & c) const{
-	return c.getUrgency().getPriority() < urgency.getPriority();
+	return c.getUrgency().getPriority() > urgency.getPriority();
 }
 
