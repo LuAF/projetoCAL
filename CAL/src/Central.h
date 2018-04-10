@@ -4,9 +4,17 @@
 #include "Util.h"
 #include "Call.h"
 
+struct CallCompare
+{
+    bool operator()(Call *t1, Call *t2) const
+    {
+        return t2->getUrgency().getPriority() < t1->getUrgency().getPriority();
+    }
+};
+
 class Central {
 private:
-	priority_queue<Call*> calls;
+	priority_queue<Call*, vector<Call*>, CallCompare> calls;
 	vector<Resource> ambulances;
 	vector<Resource> firemen;
 	vector<Resource> police;
@@ -14,7 +22,7 @@ private:
 
 public:
 	Central();
-	priority_queue<Call*> getCalls() ;
+	priority_queue<Call*, vector<Call*>, CallCompare> getCalls() ;
 	void addCalls(Call *call);
 	Call* treatCall();
 	void ignoreCall();

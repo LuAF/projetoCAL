@@ -4,7 +4,7 @@ Central::Central() {
 
 }
 
- priority_queue<Call*> Central::getCalls()  {
+priority_queue<Call*, vector<Call*>, CallCompare> Central::getCalls()  {
 	return calls;
 }
 
