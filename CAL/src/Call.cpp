@@ -25,7 +25,6 @@ bool Call::operator < ( Call * c) const{
 	if(c->getUrgency().getPriority() == urgency.getPriority())
 		return c->getLocalization( ) < this->getLocalization();
 
-	cout << "c: " << c->getUrgency().getPriority() << "  u: " << urgency.getPriority() << endl;
-	return c->getUrgency().getPriority() < urgency.getPriority();
+	return c->getUrgency().getPriority() > urgency.getPriority();
 }
 
