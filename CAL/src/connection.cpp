@@ -28,7 +28,7 @@ Connection::Connection(short port) {
     myerror("connect() failed");
 #else
 		WSADATA wsaData;
-    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+
 
 	// Create a socket.
     sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

@@ -236,14 +236,6 @@ vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo){
 		caminhosMaisCurtos.push_back(temp);
 	}
 
-	if(!caminhosINEM.empty()){
-		for(int i = 0; i < central->getInem().size();i++){
-			if(central->getInem().at(i).isAvailable())
-				cout << "True\n";
-			else cout << "False\n";
-		}
-	}
-
 	temp = {};
 
 	return caminhosMaisCurtos;
