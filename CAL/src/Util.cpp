@@ -472,6 +472,25 @@ void readResources(GraphViewer *gv, Graph<int> *grafo){
 	}
 }
 
+void printResources(GraphViewer *gv){
+	for(unsigned int i=0; i < central->getAmbulances().size(); i++){
+		gv->setVertexIcon(central->getAmbulances().at(i).getLocalization(),"images/ambulance.png");
+	}
+
+	for(unsigned int i=0; i < central->getFiremen().size(); i++){
+		gv->setVertexIcon(central->getFiremen().at(i).getLocalization(),"images/fire-truck.png");
+	}
+
+	for(unsigned int i=0; i < central->getInem().size(); i++){
+		gv->setVertexIcon(central->getInem().at(i).getLocalization(),"images/inem.png");
+	}
+
+	for(unsigned int i=0; i < central->getPolice().size(); i++){
+		gv->setVertexIcon(central->getPolice().at(i).getLocalization(),"images/police.png");
+	}
+
+}
+
 void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 	gv->setBackground("mapa.png");
 	gv->createWindow(1000, 706);
@@ -502,8 +521,6 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 
 	}
 
-	//readResources(gv, grafo);
-
 	for(unsigned int i=0; i <grafo->getVertexSet().size(); i++){
 		for(unsigned int j = 0;j < grafo->getVertexSet().at(i)->getAdj().size(); j++){
 			gv->addEdge(contador, grafo->getVertexSet().at(i)->getInfo(), grafo->getVertexSet().at(i)->getAdj().at(j).getDest()->getInfo(), EdgeType::UNDIRECTED);
@@ -511,6 +528,8 @@ void printGraph(GraphViewer *gv ,Graph<int> *grafo){
 			contador++;
 		}
 	}
+
+	printResources(gv);
 
 	for(unsigned int i = 0; i < temp.size(); i++){
 		for(unsigned int j = 0; j < temp.at(i).size() - 1; j++){

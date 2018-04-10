@@ -30,6 +30,7 @@ vector<int> closerResource(Graph<int> *g, vector<vector<int>> v);
 void readVertexs(Graph<int> *grafo);
 void readEdges(Graph<int> *grafo);
 void readResources(GraphViewer *gv, Graph<int> *grafo);
+void printResources(GraphViewer *gv);
 void printGraph(GraphViewer *gv ,Graph<int> *grafo);
 void adicionaUrgencias();
 double distancia(double latitude1, double longitude1, double latitude2, double longitude2);
