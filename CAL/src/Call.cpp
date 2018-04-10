@@ -21,7 +21,11 @@ void Call::setUrgency(const Urgency urgency) {
 	this->urgency = urgency;
 }
 
-bool Call::operator < ( Call & c) const{
-	return c.getUrgency().getPriority() < urgency.getPriority();
+bool Call::operator < ( Call * c) const{
+	if(c->getUrgency().getPriority() == urgency.getPriority())
+		return c->getLocalization( ) > this->getLocalization();
+
+	cout << "c: " << c->getUrgency().getPriority() << "  u: " << urgency.getPriority() << endl;
+	return c->getUrgency().getPriority() > urgency.getPriority();
 }
 
