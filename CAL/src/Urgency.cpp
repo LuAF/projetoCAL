@@ -22,7 +22,7 @@ void Urgency::setNome(const string& nome) {
 	this->nome = nome;
 }
 
-unsigned int Urgency::getPriority()  {
+unsigned int Urgency::getPriority() const{
 	return priority;
 }
 
