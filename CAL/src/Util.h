@@ -21,6 +21,7 @@ using namespace std;
 void menuInicial(GraphViewer *gv, Graph<int> * grafo);
 void menuOpt1(GraphViewer *gv, Graph<int> * grafo);
 void menuOpt2(GraphViewer *gv, Graph<int> * grafo);
+void menuOpt3(GraphViewer *gv, Graph<int> * grafo);
 vector<int> caminhoHospital(Graph<int> * grafo);
 vector<vector<int>> calculateShortestPath(GraphViewer *gv, Graph<int> * grafo);
 void showShortestPath();
@@ -36,4 +37,7 @@ void adicionaUrgencias();
 double distancia(double latitude1, double longitude1, double latitude2, double longitude2);
 
 void setBooleans(string name, bool &b, bool &a, bool &p, bool &i);
+
+void findResource(vector<int> ids);
+
 #endif /* SRC_UTIL_H_ */

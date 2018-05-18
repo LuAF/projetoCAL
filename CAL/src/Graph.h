@@ -125,11 +125,17 @@ public:
 	bool getSentido();
 	Vertex<T> *getDest();
 	double getWeight();
+	string getNomeRua();
 };
 
 template <class T>
 Vertex<T> *Edge<T>::getDest(){
 	return this->dest;
+}
+
+template <class T>
+string Edge<T>::getNomeRua(){
+	return this->nomeRua;
 }
 
 template <class T>

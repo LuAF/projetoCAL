@@ -3,6 +3,7 @@
 #include "Urgency.h"
 #include "Central.h"
 #include "Resource.h"
+#include "Matcher.h"
 #include <iomanip>
 
 Central *central = new Central();
@@ -11,14 +12,17 @@ Call * call;
 void menuInicial(GraphViewer *gv, Graph<int> * grafo) {
 	cout << "Central de atendimento de urgencias" << endl;
 	cout << "[1] Efetuar Chamada" << endl;
-	cout << "[2] Tratar Chamadas" << endl << endl;
+	cout << "[2] Tratar Chamadas" << endl;
+	cout << "[3] Pesquisa Recursos" << endl;
+	cout << "[0] Sair" << endl << endl;
 
 	int opt;
-	cout << "> ";
+	cout << "|> ";
 	cin >> opt;
 
-	while (opt!=1 && opt!=2){
+	while (opt!=1 && opt!=2 && opt!=3 && opt!=0){
 		cout << "Escolha uma opcao valida! " << endl;
+		cout << "|> ";
 		cin >> opt;
 	}
 
@@ -32,6 +36,15 @@ void menuInicial(GraphViewer *gv, Graph<int> * grafo) {
 		{
 			menuOpt2(gv, grafo);
 			break;
+		}
+		case 3:
+		{
+			menuOpt3(gv,grafo);
+			break;
+		}
+		case 0:
+		{
+			exit(0);
 		}
 	}
 
@@ -91,6 +104,137 @@ void menuOpt2(GraphViewer *gv, Graph<int> * grafo) {
 	getchar();
 	cout << "Tratamento da chamada de maior prioridade concluido \n\n" << endl << endl;
 	menuInicial(gv,grafo);
+}
+
+
+void menuOpt3(GraphViewer *gv, Graph<int> * grafo) {
+	cout << "\nPesquisa Recursos" << endl;
+	cin.ignore(1000,'\n');
+	string rua;
+	cout << "Insira o nome da rua a pesquisar" << endl << endl;
+	cout << "|> ";
+	getline(cin,rua);
+
+	cout << "\n[1] Pesquisa Exata" << endl;
+	cout << "[2] Pesquisa Aproximada" << endl << endl;
+
+	int opt;
+	cout << "> ";
+	cin >> opt;
+
+	while (opt!=1 && opt!=2){
+		cout << "Escolha uma opcao valida! " << endl;
+		cout << "|> ";
+		cin >> opt;
+	}
+
+	switch(opt) {
+		case 1:
+		{
+			int id;
+			id = pesquisaExata(rua);
+			vector<int> ids;
+			ids.push_back(id);
+			cout << endl;
+			findResource(ids);
+
+			break;
+		}
+		case 2:
+		{
+			int num;
+			cout << "\nInsira o numero maximo de diferencas (0 para predefinicao) " << endl;
+			cout << "|> ";
+			cin >> num;
+
+			if(num == 0)
+				num = 3;
+
+			vector<int> v;
+			v = pesquisaAproximada(rua,num);´
+			cout << endl;
+			findResource(v);
+
+			break;
+		}
+	}
+
+	cin.ignore(1000,'\n');
+	std::cout << std::endl<< "Pressione ENTER para continuar... " << std::endl;
+
+	if (std::cin.get())
+		menuInicial(gv,grafo);
+}
+
+void findResource(vector<int> ids){
+	ifstream streamLigacoes;
+	streamLigacoes.open("ligacoes.txt");
+	string line;
+	int idRua, idNo1, idNo2;
+	char ignore;
+
+	while (!streamLigacoes.eof()){
+
+		getline(streamLigacoes, line);
+		stringstream ssFicheiro(line);
+		ssFicheiro >> idRua;
+		ssFicheiro >> ignore;
+		ssFicheiro >> idNo1;
+		ssFicheiro >> ignore;
+		ssFicheiro >> idNo2;
+
+		for(int i = 0; i < ids.size();i++){
+			if(ids.at(i) == idRua){
+
+				for(int j = 0; j < central->getAmbulances().size(); j++){
+					if(central->getAmbulances().at(i).getLocalization() == idNo1){
+						cout << "Ambulancia encontrada no no' " << idNo1 << endl;
+						break;
+					}
+					else if(central->getAmbulances().at(i).getLocalization() == idNo2){
+						cout << "Ambulancia encontrada no no' " << idNo2 << endl;
+						break;
+					}
+				}
+
+				for(int j = 0; j < central->getFiremen().size(); j++){
+					if(central->getFiremen().at(i).getLocalization() == idNo1){
+						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo1 << endl;
+						break;
+					}
+					else if(central->getFiremen().at(i).getLocalization() == idNo2){
+						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo2 << endl;
+						break;
+					}
+				}
+
+				for(int j = 0; j < central->getInem().size(); j++){
+					if(central->getInem().at(i).getLocalization() == idNo1){
+						cout << "INEM encontrado no no' " << idNo1 << endl;
+						break;
+					}
+					else if(central->getInem().at(i).getLocalization() == idNo2){
+						cout << "INEM encontrado no no' " << idNo2 << endl;
+						break;
+					}
+				}
+
+				for(int j = 0; j < central->getPolice().size(); j++){
+					if(central->getPolice().at(i).getLocalization() == idNo1){
+						cout << "Veiculo da Policia encontrada no no' " << idNo1 << endl;
+						break;
+					}
+					else if(central->getPolice().at(i).getLocalization() == idNo2){
+						cout << "Veiculo da Policia encontrada no no' " << idNo2 << endl;
+						break;
+					}
+				}
+
+			}
+		}
+
+	}
+
 }
 
 vector<int> caminhoHospital(Graph<int> * grafo){
