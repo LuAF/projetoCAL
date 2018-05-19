@@ -151,7 +151,7 @@ void menuOpt3(GraphViewer *gv, Graph<int> * grafo) {
 				num = 3;
 
 			vector<int> v;
-			v = pesquisaAproximada(rua,num);´
+			v = pesquisaAproximada(rua,num);
 			cout << endl;
 			findResource(v);
 
