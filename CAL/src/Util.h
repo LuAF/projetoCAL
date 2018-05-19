@@ -38,6 +38,6 @@ double distancia(double latitude1, double longitude1, double latitude2, double l
 
 void setBooleans(string name, bool &b, bool &a, bool &p, bool &i);
 
-void findResource(vector<int> ids);
+void findResource(vector<string> ids);
 
 #endif /* SRC_UTIL_H_ */

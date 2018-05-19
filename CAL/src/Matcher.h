@@ -16,7 +16,7 @@ int kmp(string text, string pattern);
 int pesquisaExata(string toSearch);
 int editDistance(string pattern, string text);
 vector<string> numWords(string text);
-vector<int> pesquisaAproximada(string toSearch, int diffRange);
+vector<string> pesquisaAproximada(string toSearch, int diffRange);
 string to_uppercase(string s);
 
 #endif /* SRC_MATCHER_H_ */

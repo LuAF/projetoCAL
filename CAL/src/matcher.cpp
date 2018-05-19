@@ -66,7 +66,7 @@ int pesquisaExata(string toSearch) {
 	}
 
 	if(idFound == 0)
-    	cout << toSearch << " sem correspondencia" << endl;
+    	cout << endl << toSearch << " sem correspondencia" << endl;
 
     streamRoads.close();
     return idFound;
@@ -98,39 +98,21 @@ int editDistance(string pattern, string text) {
     return d[n];
 }
 
-
-vector<string> numWords(string text){
-    stringstream aux(text);
-    vector<string> ret;
-    string auxWord;
-    while(!aux.eof()){
-        aux >> auxWord;
-        if(auxWord != "do" && auxWord != "da" && auxWord != "dos" && auxWord != "das" && auxWord != "de")
-            ret.push_back(auxWord);
-    }
-    return ret;
-}
-
-vector<int> pesquisaAproximada(string toSearch, int diffRange) {
+vector<string> pesquisaAproximada(string toSearch, int diffRange) {
 
 	toSearch = to_uppercase(toSearch);
 
 	ifstream streamRoads;
 	streamRoads.open("estradas.txt");
 	string line;
-	int id;
+	string id;
 	string rua;
 	string ignoreString;
 	char ignoreChar;
 
-    vector<int> idsRuas;
+    vector<string> idsRuas;
 
-    string line1, word1, ponto, cidade;
     int numDifferences = 0;
-    int diffPerWord = INT_MAX;
-    int temp = 0;
-    vector<string> toSearchDividedSentences = numWords(toSearch);
-    vector<string> ruaDividedSentences;
 
     while (!streamRoads.eof()) {
 
@@ -138,37 +120,24 @@ vector<int> pesquisaAproximada(string toSearch, int diffRange) {
 
 		getline(streamRoads, line);
 		stringstream ssFicheiro(line);
-		ssFicheiro >> id;
-		ssFicheiro >> ignoreChar;
+		getline(ssFicheiro,id,';');
 		getline(ssFicheiro,rua,';');
 		ssFicheiro >> ignoreChar;
 		ssFicheiro >> ignoreString;
 
 		rua = to_uppercase(rua);
 
-        ruaDividedSentences = numWords(rua);
+        numDifferences = editDistance(toSearch, rua);
 
-        for(unsigned int i = 0; i < toSearchDividedSentences.size(); i++){
-
-        	diffPerWord = INT_MAX;
-
-            for(unsigned int j = 0; j < ruaDividedSentences.size(); j++){
-            	temp = editDistance( toSearchDividedSentences.at(i), ruaDividedSentences.at(j));
-
-            	if(temp < diffPerWord)
-            		diffPerWord = temp;
-            }
-
-            numDifferences += diffPerWord;
-        }
-
-        if(numDifferences <= diffRange)
+        if(numDifferences <= diffRange){
             idsRuas.push_back(id);
+            idsRuas.push_back(rua);
+        }
 
     }
 
     if(idsRuas.empty())
-    	cout << toSearch << " sem correspondencia aceitavel" << endl;
+    	cout << endl << toSearch << " sem correspondencia aceitavel" << endl;
 
     streamRoads.close();
     return idsRuas;

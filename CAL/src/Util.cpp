@@ -133,8 +133,8 @@ void menuOpt3(GraphViewer *gv, Graph<int> * grafo) {
 		{
 			int id;
 			id = pesquisaExata(rua);
-			vector<int> ids;
-			ids.push_back(id);
+			vector<string> ids;
+			ids.push_back(to_string(id));
 			cout << endl;
 			findResource(ids);
 
@@ -150,7 +150,7 @@ void menuOpt3(GraphViewer *gv, Graph<int> * grafo) {
 			if(num == 0)
 				num = 3;
 
-			vector<int> v;
+			vector<string> v;
 			v = pesquisaAproximada(rua,num);
 			cout << endl;
 			findResource(v);
@@ -166,12 +166,13 @@ void menuOpt3(GraphViewer *gv, Graph<int> * grafo) {
 		menuInicial(gv,grafo);
 }
 
-void findResource(vector<int> ids){
+void findResource(vector<string> ids){
 	ifstream streamLigacoes;
 	streamLigacoes.open("ligacoes.txt");
 	string line;
 	int idRua, idNo1, idNo2;
 	char ignore;
+	bool haveResources = false;
 
 	while (!streamLigacoes.eof()){
 
@@ -183,55 +184,68 @@ void findResource(vector<int> ids){
 		ssFicheiro >> ignore;
 		ssFicheiro >> idNo2;
 
+		for(unsigned int i = 0; i < ids.size();i += 2){
+			if(stoi(ids.at(i)) == idRua){
 
-		for(int i = 0; i < ids.size();i++){
-			if(ids.at(i) == idRua){
+				if(ids.size() > 1)
+					cout << endl << ids.at(i+1) << " : " << endl;
 
-				for(int j = 0; j < central->getAmbulances().size(); j++){
+				haveResources = false;
+
+				for(unsigned int j = 0; j < central->getAmbulances().size(); j++){
 					if(central->getAmbulances().at(j).getLocalization() == idNo1){
 						cout << "Ambulancia encontrada no no' " << idNo1 << endl;
+						haveResources = true;
 						break;
 					}
 					else if(central->getAmbulances().at(j).getLocalization() == idNo2){
 						cout << "Ambulancia encontrada no no' " << idNo2 << endl;
+						haveResources = true;
 						break;
 					}
 				}
 
-				for(int k = 0; k < central->getFiremen().size(); k++){
+				for(unsigned int k = 0; k < central->getFiremen().size(); k++){
 					if(central->getFiremen().at(k).getLocalization() == idNo1){
 						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo1 << endl;
+						haveResources = true;
 						break;
 					}
 					else if(central->getFiremen().at(k).getLocalization() == idNo2){
 						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo2 << endl;
+						haveResources = true;
 						break;
 					}
 				}
 
-				for(int l = 0; l < central->getInem().size(); l++){
+				for(unsigned int l = 0; l < central->getInem().size(); l++){
 					if(central->getInem().at(l).getLocalization() == idNo1){
 						cout << "INEM encontrado no no' " << idNo1 << endl;
+						haveResources = true;
 						break;
 					}
 					else if(central->getInem().at(l).getLocalization() == idNo2){
 						cout << "INEM encontrado no no' " << idNo2 << endl;
+						haveResources = true;
 						break;
 					}
 				}
 
-				for(int m = 0; m < central->getPolice().size(); m++){
+				for(unsigned int m = 0; m < central->getPolice().size(); m++){
 					if(central->getPolice().at(m).getLocalization() == idNo1){
 						cout << "Veiculo da Policia encontrada no no' " << idNo1 << endl;
+						haveResources = true;
 						break;
 					}
 					else if(central->getPolice().at(m).getLocalization() == idNo2){
 						cout << "Veiculo da Policia encontrada no no' " << idNo2 << endl;
+						haveResources = true;
 						break;
 					}
 				}
 
-
+				if(!haveResources)
+					cout << "Rua sem recursos encontrados" << endl;
 
 			}
 		}
