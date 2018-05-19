@@ -183,55 +183,59 @@ void findResource(vector<int> ids){
 		ssFicheiro >> ignore;
 		ssFicheiro >> idNo2;
 
+
 		for(int i = 0; i < ids.size();i++){
 			if(ids.at(i) == idRua){
 
 				for(int j = 0; j < central->getAmbulances().size(); j++){
-					if(central->getAmbulances().at(i).getLocalization() == idNo1){
+					if(central->getAmbulances().at(j).getLocalization() == idNo1){
 						cout << "Ambulancia encontrada no no' " << idNo1 << endl;
 						break;
 					}
-					else if(central->getAmbulances().at(i).getLocalization() == idNo2){
+					else if(central->getAmbulances().at(j).getLocalization() == idNo2){
 						cout << "Ambulancia encontrada no no' " << idNo2 << endl;
 						break;
 					}
 				}
 
-				for(int j = 0; j < central->getFiremen().size(); j++){
-					if(central->getFiremen().at(i).getLocalization() == idNo1){
+				for(int k = 0; k < central->getFiremen().size(); k++){
+					if(central->getFiremen().at(k).getLocalization() == idNo1){
 						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo1 << endl;
 						break;
 					}
-					else if(central->getFiremen().at(i).getLocalization() == idNo2){
+					else if(central->getFiremen().at(k).getLocalization() == idNo2){
 						cout << "Veiculo dos Bombeiros encontrado no no' " << idNo2 << endl;
 						break;
 					}
 				}
 
-				for(int j = 0; j < central->getInem().size(); j++){
-					if(central->getInem().at(i).getLocalization() == idNo1){
+				for(int l = 0; l < central->getInem().size(); l++){
+					if(central->getInem().at(l).getLocalization() == idNo1){
 						cout << "INEM encontrado no no' " << idNo1 << endl;
 						break;
 					}
-					else if(central->getInem().at(i).getLocalization() == idNo2){
+					else if(central->getInem().at(l).getLocalization() == idNo2){
 						cout << "INEM encontrado no no' " << idNo2 << endl;
 						break;
 					}
 				}
 
-				for(int j = 0; j < central->getPolice().size(); j++){
-					if(central->getPolice().at(i).getLocalization() == idNo1){
+				for(int m = 0; m < central->getPolice().size(); m++){
+					if(central->getPolice().at(m).getLocalization() == idNo1){
 						cout << "Veiculo da Policia encontrada no no' " << idNo1 << endl;
 						break;
 					}
-					else if(central->getPolice().at(i).getLocalization() == idNo2){
+					else if(central->getPolice().at(m).getLocalization() == idNo2){
 						cout << "Veiculo da Policia encontrada no no' " << idNo2 << endl;
 						break;
 					}
 				}
 
+
+
 			}
 		}
+
 
 	}
 
